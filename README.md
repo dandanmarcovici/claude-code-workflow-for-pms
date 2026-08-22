@@ -27,7 +27,7 @@ push, open PR
     ↓
 @codex review       (comment, every time)
     ↓
-/code-review ultra  +  /peer-review     (optional, complex/risky changes)
+/peer-review        (optional, reconciles findings before merging)
     ↓
 merge
 ```
