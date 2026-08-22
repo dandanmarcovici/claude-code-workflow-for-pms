@@ -8,6 +8,26 @@ This is the actual process I use to design, build, review, and ship features in 
 
 It's extracted directly from a real, live project: a Next.js app I've been building end-to-end through Claude Code sessions, iterated and corrected repeatedly as things broke, turned out to be overkill, or just never got used.
 
+## The flow
+
+```
+/explore
+    ↓
+/visual-explore     (UI features only)
+    ↓
+Plan Mode           (native, the real due-diligence step)
+    ↓
+/create-plan
+    ↓
+/execute
+    ↓
+/code-review  →  push, open PR  →  @codex review
+    ↓
+merge
+```
+
+Full sequence, including the one-time design-brief bootstrap and the optional deep-review escalation, is in `WORKFLOW.md`.
+
 ## What's inside
 
 - **`WORKFLOW.md`**: the process itself. The full sequence (explore → design → plan → build → review → ship), when each step runs and when it's skippable, and the reasoning behind each decision.
