@@ -88,7 +88,7 @@ This workflow was built and iterated on inside a real production codebase — a 
 
 - **`docs/design-guidelines.md`** — created automatically the first time you run `/design-brief`. Nothing to set up in advance.
 - **Your backlog/tracker** — `/create-issue` needs a target. Edit `.claude/commands/create-issue.md` to point at wherever your backlog actually lives — a markdown file in-repo, Linear, Notion, whatever.
-- **Codex + GitHub** — `@codex review` assumes Codex's GitHub app is connected to your repo. If you don't use Codex, drop that step from the sequence and rely on `/code-review` + `/code-review ultra` instead.
+- **Codex + GitHub** — `@codex review` assumes Codex's GitHub app is connected to your repo, and needs at least a ChatGPT Plus plan (the free tier excludes GitHub PR review). If you don't use Codex, drop that step from the sequence and rely on `/code-review` + `/code-review ultra` instead.
 - **Claude Design** — `/visual-explore` invokes the bundled `design` skill (Claude Design's editor running inside a published Artifact). Ships with Claude Code — nothing to install.
 - **`frontend-design` skill** — used automatically during `/execute` for UI work. Anthropic's official skill, not duplicated in this repo — see [anthropics/skills](https://github.com/anthropics/skills/tree/main/skills/frontend-design).
 
