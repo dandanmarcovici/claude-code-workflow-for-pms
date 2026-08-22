@@ -36,16 +36,20 @@ Full sequence, including the one-time design-brief bootstrap and the optional de
 
 ## What's inside
 
-- **`WORKFLOW.md`**: the process itself. The full sequence (explore → design → plan → build → review → ship), when each step runs and when it's skippable, and the reasoning behind each decision.
-- **`.claude/commands/`**: 8 slash commands that implement the workflow.
-  - `/explore`: understand before building, surface ambiguity
-  - `/design-brief`: bootstrap visual direction (once per product, not per screen)
-  - `/visual-explore`: iterate on UI in Claude Design before writing code
-  - `/create-plan`: persist an approved Plan Mode session to a plan file
-  - `/execute`: implement the plan
-  - `/peer-review`: reconcile real PR review comments (Codex, `/code-review ultra`)
-  - `/product-sense`: a 5-question stress test for product decisions before you commit to them
-  - `/create-issue`: fast capture of a bug/idea mid-flow to your backlog
+**`WORKFLOW.md`**: the process itself. The full sequence (explore → design → plan → build → review → ship), when each step runs and when it's skippable, and the reasoning behind each decision.
+
+**`.claude/commands/`**: 8 slash commands that implement the workflow.
+
+| Command | What it does | When to use it |
+|---|---|---|
+| `/explore` | Reads the codebase, asks clarifying questions, surfaces ambiguity, no code written yet | Before every feature or fix |
+| `/design-brief` | Discovery session that produces `docs/design-guidelines.md`: aesthetic direction, typography, palette, layout patterns | Once per product, or a deliberate direction change, not per screen |
+| `/visual-explore` | Iterates on UI directly in Claude Design before any code, extracts a `ui-spec-[feature].md` for the build to follow | New screens or structural layout changes |
+| `/create-plan` | Persists an already-approved Plan Mode session to a plan file, for cross-session continuity | After Plan Mode is approved |
+| `/execute` | Implements the plan step by step, loading the design guidelines and ui-spec where they exist | After the plan is approved |
+| `/peer-review` | Fetches real PR review comments, verifies each against the actual code, decides what's worth fixing | Opt-in, once a PR has real findings to reconcile |
+| `/product-sense` | A 5-question stress test (empathy, simulation, strategy, taste, creativity) ending in a Go / Reconsider / Stop verdict | Before a significant product decision |
+| `/create-issue` | Fast-captures a bug or idea to your backlog mid-flow, 2-3 questions max | Whenever something surfaces while you're heads-down on something else |
 
 ## Requirements
 
