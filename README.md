@@ -21,7 +21,13 @@ Plan Mode           (native, the real due-diligence step)
     ↓
 /execute
     ↓
-/code-review  →  push, open PR  →  @codex review
+/code-review        (native, every session before pushing)
+    ↓
+push, open PR
+    ↓
+@codex review       (comment, every time)
+    ↓
+/code-review ultra  +  /peer-review     (optional, complex/risky changes)
     ↓
 merge
 ```
