@@ -48,7 +48,6 @@ Full sequence, including the one-time design-brief bootstrap and the optional de
 | `/create-plan` | Persists an already-approved Plan Mode session to a plan file, for cross-session continuity | After Plan Mode is approved |
 | `/execute` | Implements the plan step by step, loading the design guidelines and ui-spec where they exist | After the plan is approved |
 | `/peer-review` | Fetches real PR review comments, verifies each against the actual code, decides what's worth fixing | Opt-in, once a PR has real findings to reconcile |
-| `/product-sense` | A 5-question stress test (empathy, simulation, strategy, taste, creativity) ending in a Go / Reconsider / Stop verdict | Before a significant product decision |
 | `/create-issue` | Fast-captures a bug or idea to your backlog mid-flow, 2-3 questions max | Whenever something surfaces while you're heads-down on something else |
 
 ## Requirements
