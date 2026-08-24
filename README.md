@@ -6,6 +6,8 @@
 
 This is the actual process I use to design, build, review, and ship features in a production app, running Claude Code as the primary driver. I'm a PM, not a developer, so everything here exists to catch mistakes automatically, without me having to read code or catch them myself.
 
+PMs are increasingly becoming builders themselves: shipping prototypes, testing ideas, building real features. This workflow gives that work the same structure a developer already has by instinct, not a replacement for one.
+
 It's extracted directly from a real, live project: a Next.js app I've been building end-to-end through Claude Code sessions, iterated and corrected repeatedly as things broke, turned out to be overkill, or just never got used.
 
 ## The flow
