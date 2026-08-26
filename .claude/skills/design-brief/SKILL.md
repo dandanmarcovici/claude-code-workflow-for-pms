@@ -1,12 +1,17 @@
+---
+name: design-brief
+description: Discovery session that defines a project's visual/design direction and produces docs/design-guidelines.md. Use once per product or UI foundation, or for a deliberate direction change — not per feature or per screen.
+---
+
 # Design Brief
 
 You are starting a design discovery session. Your goal is to produce or update `docs/design-guidelines.md` with concrete, actionable visual direction.
 
-**When to run this command:**
+**When to run this skill:**
 - **Bootstrap** — `docs/design-guidelines.md` doesn't exist yet for this product/module. Not per-epic, not per-screen — once a foundation exists, it grows incrementally (see below).
 - **Deliberate direction change** — a rebrand, or a screen so unlike anything the current guidelines cover that they genuinely don't answer the question. Rare, and a judgment call — not triggered automatically by "new screen."
 
-A new screen or a new token on its own is **not** a reason to re-run this. `/visual-explore` promotes new color/token decisions into `docs/design-guidelines.md` as part of its own Step 6, and `/execute` promotes anything that surfaces mid-implementation — both incrementally extend the same file without reopening a full discovery session.
+A new screen or a new token on its own is **not** a reason to re-run this. `visual-explore` promotes new color/token decisions into `docs/design-guidelines.md` as part of its own Step 6, and `execute` promotes anything that surfaces mid-implementation — both incrementally extend the same file without reopening a full discovery session.
 
 ---
 
@@ -98,4 +103,4 @@ After user approval, create or update `docs/design-guidelines.md` with:
 After writing the file, confirm with the user:
 - The file was created/updated at `docs/design-guidelines.md`
 - The product/module now has clear visual direction to build against
-- Remind the user that `/execute` will load this file automatically for UI tasks
+- Remind the user that `execute` will load this file automatically for UI tasks

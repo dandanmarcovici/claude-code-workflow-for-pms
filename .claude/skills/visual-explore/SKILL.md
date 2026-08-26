@@ -1,8 +1,13 @@
+---
+name: visual-explore
+description: Iterate on UI layout, structure, and component decisions visually in Claude Design before any code is written, producing a ui-spec doc that feeds execute. Use for features with new screens or structural layout changes — skip for logic-only work or minor visual tweaks.
+---
+
 # Visual Explore
 
-You are starting a visual exploration session in Claude Design (the `design` skill) before any code is written. Your goal is to validate layout, structure, and component decisions visually — and extract a `ui-spec-[feature].md` that will serve as input for `/create-plan` and `/execute`.
+You are starting a visual exploration session in Claude Design (the `design` skill) before any code is written. Your goal is to validate layout, structure, and component decisions visually — and extract a `ui-spec-[feature].md` that will serve as input for Plan Mode and `execute`.
 
-**When this command is used:**
+**When this skill is used:**
 - Any feature with a new screen or structural layout change
 - When the user needs to see and iterate on UI before committing to code
 - Skip for logic-only features, bug fixes, or minor visual adjustments
@@ -41,7 +46,7 @@ This is a dialogue loop. The user is the architect — you execute.
 - For decisions that involve UX tradeoffs, business rules, or layout choices with non-obvious consequences: pause, surface the options briefly, and align before acting. Examples: two valid ways to represent a data model, a layout choice that affects a future state, a pattern that conflicts with how the engine works.
 - After each meaningful change, describe what changed and republish. Let the user see and react on the live link.
 - If a direction conflicts with `design-guidelines.md`, flag it briefly and ask how to proceed. Don't override silently.
-- If a color/token choice is genuinely new (not yet in `design-guidelines.md`), track it — it gets promoted to the guidelines in Step 6 below, or during `/execute` if it only becomes clear once coding starts.
+- If a color/token choice is genuinely new (not yet in `design-guidelines.md`), track it — it gets promoted to the guidelines in Step 6 below, or during `execute` if it only becomes clear once coding starts.
 - Keep iterating until the user signals the structure is good.
 
 ---
@@ -66,7 +71,7 @@ Before writing the spec, confirm with the user:
 - What is explicitly **in scope** for this build?
 - What did we explore that is **out of scope** for now?
 
-This prevents scope creep in `/execute` and makes the plan file more precise.
+This prevents scope creep during `execute` and makes the plan more precise.
 
 ---
 
@@ -79,7 +84,7 @@ Save to `plans/ui-spec-[feature-name].md` using this structure:
 
 > Generated from Claude Design iterations (session on [date]).
 > Working artboards in `docs/design/[feature-name]/`. Published link: [artifact URL].
-> Input for `/execute`. [Note any explicit out-of-scope items.]
+> Input for `execute`. [Note any explicit out-of-scope items.]
 
 ---
 
@@ -118,4 +123,4 @@ After saving the file:
 
 1. Confirm the file path to the user: `plans/ui-spec-[feature-name].md`
 2. List any divergences from `design-guidelines.md` found during this session (values that need to be reconciled)
-3. Remind the user: run `/create-plan` next — the plan should reference this spec file
+3. Remind the user: Plan Mode next — the plan should reference this spec file

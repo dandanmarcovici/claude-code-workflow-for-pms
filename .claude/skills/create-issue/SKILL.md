@@ -1,8 +1,13 @@
+---
+name: create-issue
+description: Quickly capture a bug, feature idea, or improvement to the project's backlog/tracker while mid-development. Use when the user mentions an idea or issue in passing while working on something else, without breaking their flow.
+---
+
 # Create Issue
 
 User is mid-development and thought of a bug, feature, or improvement. Capture it fast so they can keep working.
 
-**Where it goes:** your project's backlog/tracker file. Point this at wherever that actually lives for you — a markdown file in this repo (e.g. `docs/tracker.md`), a doc in a sibling repo, Linear, Notion, whatever. Edit this line once you've decided, then append to its tickets/backlog section — don't restructure the rest of the doc.
+**Where it goes:** check this project's `CLAUDE.md` for where the backlog/tracker lives — a markdown file in this repo, a doc in a sibling repo, Linear, Notion, whatever. If it's not documented there, ask the user once, then note it as something worth adding to `CLAUDE.md` so this doesn't need asking again. Append to the tracker's tickets/backlog section; don't restructure the rest of the doc.
 
 ## Goal
 

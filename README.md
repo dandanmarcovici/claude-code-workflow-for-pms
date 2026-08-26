@@ -13,15 +13,13 @@ It's extracted directly from a real, live project: a Next.js app I've been build
 ## The flow
 
 ```
-/explore
+explore
     ↓
-/visual-explore     (UI features only)
+visual-explore      (UI features only)
     ↓
 Plan Mode           (native, the real due-diligence step)
     ↓
-/create-plan
-    ↓
-/execute
+execute
     ↓
 /code-review        (native, every session before pushing)
     ↓
@@ -31,28 +29,28 @@ push, open PR
     ↓
 Codex watch         (Monitor pings Claude when Codex answers, ~3min)
     ↓
-/peer-review        (optional, reconciles findings before merging)
+peer-review         (optional, reconciles findings before merging)
     ↓
 merge
 ```
 
-Full sequence, including the one-time design-brief bootstrap and the optional deep-review escalation, is in `WORKFLOW.md`.
+Full sequence, including the one-time design-brief bootstrap and the optional deep-review escalation, is in the `dev-workflow` skill (and mirrored in `WORKFLOW.md` for a quick read on GitHub).
 
 ## What's inside
 
-**`WORKFLOW.md`**: the process itself. The full sequence (explore → design → plan → build → review → ship), when each step runs and when it's skippable, and the reasoning behind each decision.
+**`WORKFLOW.md`**: the process itself, as a human-readable reference. The full sequence (explore → design → plan → build → review → ship), when each step runs and when it's skippable, and the reasoning behind each decision.
 
-**`.claude/commands/`**: 7 slash commands that implement the workflow.
+**`.claude/skills/`**: `dev-workflow` (the sequence and rules above, auto-loads when you start new feature work) plus one skill per step.
 
-| Command | What it does | When to use it |
+| Skill | What it does | When to use it |
 |---|---|---|
-| `/explore` | Reads the codebase, asks clarifying questions, surfaces ambiguity, no code written yet | Before every feature or fix |
-| `/design-brief` | Discovery session that produces `docs/design-guidelines.md`: aesthetic direction, typography, palette, layout patterns | Once per product, or a deliberate direction change, not per screen |
-| `/visual-explore` | Iterates on UI directly in Claude Design before any code, extracts a `ui-spec-[feature].md` for the build to follow | New screens or structural layout changes |
-| `/create-plan` | Persists an already-approved Plan Mode session to a plan file, for cross-session continuity | After Plan Mode is approved |
-| `/execute` | Implements the plan step by step, loading the design guidelines and ui-spec where they exist | After the plan is approved |
-| `/peer-review` | Fetches real PR review comments, verifies each against the actual code, decides what's worth fixing | Opt-in, once a PR has real findings to reconcile |
-| `/create-issue` | Fast-captures a bug or idea to your backlog mid-flow, 2-3 questions max | Whenever something surfaces while you're heads-down on something else |
+| `dev-workflow` | The full sequence and rules — auto-invoked at the start of feature/bug work, or run `/dev-workflow` directly | Loads automatically; that's the point |
+| `explore` | Reads the codebase, asks clarifying questions, surfaces ambiguity, no code written yet | Before every feature or fix |
+| `design-brief` | Discovery session that produces `docs/design-guidelines.md`: aesthetic direction, typography, palette, layout patterns | Once per product, or a deliberate direction change, not per screen |
+| `visual-explore` | Iterates on UI directly in Claude Design before any code, extracts a `ui-spec-[feature].md` for the build to follow | New screens or structural layout changes |
+| `execute` | Implements the plan step by step, loading the design guidelines and ui-spec where they exist | After Plan Mode's plan is approved |
+| `peer-review` | Fetches real PR review comments, verifies each against the actual code, decides what's worth fixing | Opt-in, once a PR has real findings to reconcile |
+| `create-issue` | Fast-captures a bug or idea to your backlog mid-flow, 2-3 questions max | Whenever something surfaces while you're heads-down on something else |
 
 **`.claude/scripts/wait-for-codex.sh`**: run as a Monitor right after tagging `@codex review`, it polls the PR and pings Claude the moment Codex answers — so nobody sits refreshing GitHub waiting to find out. It stays quiet while Codex is thinking and always ends by saying something, answer or deadline.
 
@@ -66,15 +64,16 @@ No Codex, no Plus plan? Drop that step. `/code-review` and `/code-review ultra` 
 
 ## Setup
 
-1. Copy `WORKFLOW.md` and `.claude/commands/` into the root of your project.
-2. Read "Adapting this to your project" in `WORKFLOW.md`. A few things (where your backlog lives, whether you use Codex) need pointing at your own setup.
-3. Start a session with `/explore` on your first feature.
+1. Copy `.claude/skills/` into `~/.claude/skills/` (your home directory, not any one project) — that's what makes the workflow apply to every project automatically, not just the one you copied it into. Prefer to keep it project-local instead? Copy it into the project's own `.claude/skills/` and drop `WORKFLOW.md` there too.
+2. Read "Adapting this to your project" below. A few things (where your backlog lives, whether you use Codex) need pointing at your own setup — most of that now happens through your project's own `CLAUDE.md`, not by editing the skill files.
+3. Start a session and describe your first feature — `dev-workflow` should auto-invoke, or start it yourself with `/explore`.
 
-That's the whole install. Claude Code picks up `.claude/commands/` automatically, no build step, no package.
+That's the whole install. Claude Code picks up `~/.claude/skills/` automatically in every project, no build step, no package.
 
 ## The core lessons, if you read nothing else
 
 - **Prefer Claude Code's native features over hand-rolled prompts.** A custom "plan" command and a custom "review" command both lost out to what's already native: Plan Mode and `/code-review`. Check before you build.
+- **Generic process vs. project-specific facts are not the same file.** A skill should work unmodified in any project; anything project-specific (where the backlog lives, which tool you use for a step) belongs in that project's `CLAUDE.md`, not hardcoded into the skill. Mixing the two is what makes a shared workflow quietly drift per project.
 - **Don't build process artifacts nobody reads.** A changelog, a progress-percentage checklist on plan files: both got cut here because nobody, including me, ever read them live. A doc with no real reader is ceremony, not documentation.
 - **Automated review triggers aren't reliable: verify, don't hope.** GitHub's "review on PR open" integrations can silently not fire. Make the trigger an explicit step instead of an assumption.
 - **A design system is a bootstrap step, not a per-screen ritual.** Run the discovery session once, then extend it incrementally.

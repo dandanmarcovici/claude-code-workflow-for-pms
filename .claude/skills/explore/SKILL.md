@@ -1,3 +1,8 @@
+---
+name: explore
+description: Understand a codebase and requirements before writing any code — analyzes integration points, dependencies, and ambiguities, then asks clarifying questions instead of assuming. Use before implementing any new feature or fix, per the dev-workflow.
+---
+
 # Initial Exploration Stage
 
 Your task is NOT to implement this yet, but to fully understand and prepare.

@@ -22,9 +22,7 @@ NEW FEATURE / BUG
   Plan Mode         ← Claude enters Plan Mode itself (EnterPlanMode), explores the
       ↓               code, reasons through the approach and trade-offs, presents
       ↓               it for approval (ExitPlanMode) — this is where due diligence
-      ↓               actually happens, not in /create-plan
-  /create-plan      ← persists the already-approved plan to plans/[feature].md
-      ↓               (plain text, no status tracking — see Rules)
+      ↓               actually happens
   git: branch out   ← feature/short-name, from main
       ↓
   /execute          ← implement the plan (loads design-guidelines.md + ui-spec if exists)
@@ -63,7 +61,6 @@ Not every step runs every time. `/design-brief` only when there's no `design-gui
 | `/explore` | Before writing any code | Reads codebase, asks clarifying questions, surfaces ambiguities |
 | `/visual-explore` | After `/explore`, for UI features with new screens or structural layout changes | Iterates on artboards in Claude Design → produces `plans/ui-spec-[feature].md` |
 | Plan Mode (native) | After `/explore` (and `/visual-explore` if applicable), for anything beyond a small self-contained fix | Claude explores the code, reasons about architecture/trade-offs, and presents a plan for approval before writing any code — this is the actual due-diligence step |
-| `/create-plan` | After Plan Mode is approved | Persists the approved plan verbatim to `plans/[feature-name].md` for cross-session continuity — plain text, no status tracking (see Rules) |
 | `/execute` | After plan is approved | Implements step by step; loads `design-guidelines.md` + `ui-spec` if exists + the `frontend-design` skill |
 | `frontend-design` (skill) | Applied automatically during `/execute` for UI | Enforces aesthetic guidelines: typography, color, motion, layout — avoids generic AI defaults. Anthropic's official skill — see [anthropics/skills](https://github.com/anthropics/skills/tree/main/skills/frontend-design). |
 | `/code-review` (native) | After `/execute`, every session | Free, local — reviews the branch's diff, structured findings at effort `low`→`max`. `--comment` posts inline on an open PR, `--fix` applies fixes directly. **Pass effort explicitly** — see "Choosing `/code-review` effort" below; don't let it default to `high`. |
@@ -93,7 +90,7 @@ Default to `low` unless the change clearly crosses into `medium`/`high`. Running
 This workflow was built and iterated on inside a real production codebase — a solo, non-developer PM running the whole dev process through Claude Code. A few things to point at your own setup before it works out of the box:
 
 - **`docs/design-guidelines.md`** — created automatically the first time you run `/design-brief`. Nothing to set up in advance.
-- **Your backlog/tracker** — `/create-issue` needs a target. Edit `.claude/commands/create-issue.md` to point at wherever your backlog actually lives — a markdown file in-repo, Linear, Notion, whatever.
+- **Your backlog/tracker** — `/create-issue` needs a target. It checks this project's `CLAUDE.md` for where the backlog lives; document it there (a markdown file in-repo, Linear, Notion, whatever) and it stops needing to ask.
 - **Codex + GitHub** — `@codex review` assumes Codex's GitHub app is connected to your repo, and needs at least a ChatGPT Plus plan (the free tier excludes GitHub PR review). If you don't use Codex, drop that step from the sequence and rely on `/code-review` + `/code-review ultra` instead.
 - **Claude Design** — `/visual-explore` invokes the bundled `design` skill (Claude Design's editor running inside a published Artifact). Ships with Claude Code — nothing to install.
 - **`frontend-design` skill** — used automatically during `/execute` for UI work. Anthropic's official skill, not duplicated in this repo — see [anthropics/skills](https://github.com/anthropics/skills/tree/main/skills/frontend-design).
@@ -156,10 +153,9 @@ Claude can run these commands for you — just ask. The important thing is not f
 
 | File | Purpose |
 |---|---|
-| `CLAUDE.md` | System prompt — loaded in every session (not included here — write your own; see [`pm-second-brain`](https://github.com/dandanmarcovici/pm-second-brain) for a starting structure) |
-| `WORKFLOW.md` | This file — development process reference |
-| `docs/design-guidelines.md` | Visual contract — read by `/execute` before any UI task (created by `/design-brief`) |
-| `.claude/commands/` | All slash commands in this repo |
+| `CLAUDE.md` | System prompt — loaded in every session (not included here — write your own; see [`pm-second-brain`](https://github.com/dandanmarcovici/pm-second-brain) for a starting structure). Holds project-specific facts only (tracker location, sibling repos) — the workflow itself lives in the `dev-workflow` skill, not here. |
+| `.claude/skills/` | The skills in this repo — `dev-workflow` (the sequence and rules) plus one skill per step (`explore`, `visual-explore`, `design-brief`, `execute`, `peer-review`, `create-issue`). Copy this folder to `~/.claude/skills/` to make the workflow available in every project, not just this one. |
+| `docs/design-guidelines.md` | Visual contract — read by `execute` before any UI task (created by `design-brief`) |
 | `.claude/skills/frontend-design/` | Anthropic's official frontend design skill — not duplicated here, see [anthropics/skills](https://github.com/anthropics/skills/tree/main/skills/frontend-design) |
 | `.claude/scripts/wait-for-codex.sh` | Polls a PR for Codex's answer; run as a Monitor so Claude is notified instead of anyone having to check |
 | `plans/` | Plan Mode output, persisted per feature (plain reasoning, no status tracking) + ui-specs |
