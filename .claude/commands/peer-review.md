@@ -4,12 +4,18 @@
 
 This command reconciles **real PR comments** — from Codex and/or `/code-review ultra` (run with `--comment`) — not feedback pasted in manually.
 
-Codex's "on PR open" auto-trigger isn't reliable — it can silently not fire. `WORKFLOW.md` has commenting `@codex review` right after opening the PR as its own step, always, so don't assume Codex has reviewed by the time this command runs. If step 2 below comes back empty, that step was probably skipped — go comment `@codex review` and wait before concluding there's nothing to reconcile.
+Codex's "on PR open" auto-trigger isn't reliable — it can silently not fire. `WORKFLOW.md` has commenting `@codex review` right after opening the PR as its own step, always. **Once tagged, Codex does answer**, in about three minutes — the unreliability is in the auto-trigger, not in Codex.
+
+`WORKFLOW.md` also has arming `.claude/scripts/wait-for-codex.sh <PR>` as a Monitor immediately after the tag, so this command normally runs *because* the watch fired — not on a guess about whether Codex is done. If it's being run without that, confirm the `@codex review` comment actually exists before concluding anything.
 
 ## What to do
 
 1. Identify the PR for the current branch. If ambiguous, ask — or take a PR number as an argument.
-2. Fetch the PR's review comments via GitHub (`mcp__github__get_pull_request_comments` / `get_pull_request_reviews`). Ignore plain discussion replies — only findings.
+2. Fetch what Codex posted. **Check both surfaces** — which one it uses depends on the outcome:
+   - **Found nothing** → a plain **issue comment** ("Codex Review: Didn't find any major issues"), and *no review at all*: `gh api repos/{owner}/{repo}/issues/<PR>/comments`
+   - **Found something** → a **review** plus **inline comments** on the diff, and *no issue comment*: `mcp__github__get_pull_request_reviews` / `get_pull_request_comments`
+
+   This is why an empty result is ambiguous and must not be read as "nobody reviewed": querying only the review endpoints — what this step used to say — comes back empty on every clean review, which is the common case. Filter to `chatgpt-codex-connector[bot]`, and to comments newer than the `@codex review` tag: after a follow-up push, an older answer refers to a commit that no longer exists. Ignore plain discussion replies — only findings.
 3. For EACH finding:
    - **Verify it exists** — check the actual code. Don't take it at face value.
    - **They have less context than you** on this project's history and decisions (Codex, and `/code-review ultra`'s cloud agents alike) — **you are the dev lead**.

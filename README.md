@@ -29,6 +29,8 @@ push, open PR
     ↓
 @codex review       (comment, every time)
     ↓
+Codex watch         (Monitor pings Claude when Codex answers, ~3min)
+    ↓
 /peer-review        (optional, reconciles findings before merging)
     ↓
 merge
@@ -40,7 +42,7 @@ Full sequence, including the one-time design-brief bootstrap and the optional de
 
 **`WORKFLOW.md`**: the process itself. The full sequence (explore → design → plan → build → review → ship), when each step runs and when it's skippable, and the reasoning behind each decision.
 
-**`.claude/commands/`**: 8 slash commands that implement the workflow.
+**`.claude/commands/`**: 7 slash commands that implement the workflow.
 
 | Command | What it does | When to use it |
 |---|---|---|
@@ -51,6 +53,8 @@ Full sequence, including the one-time design-brief bootstrap and the optional de
 | `/execute` | Implements the plan step by step, loading the design guidelines and ui-spec where they exist | After the plan is approved |
 | `/peer-review` | Fetches real PR review comments, verifies each against the actual code, decides what's worth fixing | Opt-in, once a PR has real findings to reconcile |
 | `/create-issue` | Fast-captures a bug or idea to your backlog mid-flow, 2-3 questions max | Whenever something surfaces while you're heads-down on something else |
+
+**`.claude/scripts/wait-for-codex.sh`**: run as a Monitor right after tagging `@codex review`, it polls the PR and pings Claude the moment Codex answers — so nobody sits refreshing GitHub waiting to find out. It stays quiet while Codex is thinking and always ends by saying something, answer or deadline.
 
 ## Requirements
 

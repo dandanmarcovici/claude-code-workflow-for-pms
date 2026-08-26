@@ -38,6 +38,11 @@ NEW FEATURE / BUG
   comment "@codex review" on the PR   ← always, immediately — GitHub's auto-trigger on PR
       ↓                                 open isn't reliable in practice, don't wait/hope for it
       ↓
+  arm the Codex watch  ← Monitor + .claude/scripts/wait-for-codex.sh <PR>
+      ↓                Claude gets pinged the moment Codex answers (~3min) instead
+      ↓                of anyone refreshing the PR page. Silent until then, and it
+      ↓                always ends by saying something — answer or deadline.
+      ↓
   [optional, complex or risky changes only]
       ↓
   /code-review ultra   ← cloud multi-agent fleet, deeper pass on the branch/PR
@@ -63,6 +68,7 @@ Not every step runs every time. `/design-brief` only when there's no `design-gui
 | `frontend-design` (skill) | Applied automatically during `/execute` for UI | Enforces aesthetic guidelines: typography, color, motion, layout — avoids generic AI defaults. Anthropic's official skill — see [anthropics/skills](https://github.com/anthropics/skills/tree/main/skills/frontend-design). |
 | `/code-review` (native) | After `/execute`, every session | Free, local — reviews the branch's diff, structured findings at effort `low`→`max`. `--comment` posts inline on an open PR, `--fix` applies fixes directly. **Pass effort explicitly** — see "Choosing `/code-review` effort" below; don't let it default to `high`. |
 | `@codex review` (PR comment) | Always, immediately after opening the PR | Manually triggers Codex's GitHub review. Its "on PR open" auto-trigger isn't reliable — don't depend on it firing by itself. |
+| Codex watch (Monitor) | Right after the `@codex review` comment | Runs `.claude/scripts/wait-for-codex.sh <PR>` as a background Monitor. Polls the PR every 60s and notifies Claude the moment Codex answers, so nobody sits refreshing GitHub. Emits nothing while waiting; after 15min with no answer it says so rather than going quiet. Codex usually answers in about three minutes. |
 | `/code-review ultra` (native) | Opt-in, complex or risky changes only, before merging | Uploads the branch/PR to a cloud sandbox; a fleet of specialist agents (security, correctness, architecture, perf, tests) cross-verify findings. Costs usage credits. |
 | `/peer-review` | Opt-in, after a PR has real comments to reconcile | Reads the PR's actual comments (from Codex and/or `/code-review ultra`) via GitHub, verifies each against the code, decides what's worth fixing. |
 | `/product-sense` | Before a significant product decision | 5-question stress-test (empathy, simulation, strategy, taste, creativity) — Go / Reconsider / Stop verdict |
@@ -121,10 +127,11 @@ Claude can run these commands for you — just ask. The important thing is not f
 4. /code-review before pushing — every time, it's free (pick effort by change size — see "Choosing /code-review effort")
 5. Push, open PR (even solo — build the habit)
 6. Comment "@codex review" on the PR immediately — always, don't rely on auto-trigger
-7. If complex/risky: /code-review ultra
-8. /peer-review to reconcile any real findings posted on the PR
-9. Merge to main
-10. Delete branch
+7. Arm the Codex watch: Monitor running .claude/scripts/wait-for-codex.sh <PR>
+8. If complex/risky: /code-review ultra
+9. /peer-review when the watch fires, to reconcile what Codex posted
+10. Merge to main
+11. Delete branch
 ```
 
 ---
@@ -154,5 +161,6 @@ Claude can run these commands for you — just ask. The important thing is not f
 | `docs/design-guidelines.md` | Visual contract — read by `/execute` before any UI task (created by `/design-brief`) |
 | `.claude/commands/` | All slash commands in this repo |
 | `.claude/skills/frontend-design/` | Anthropic's official frontend design skill — not duplicated here, see [anthropics/skills](https://github.com/anthropics/skills/tree/main/skills/frontend-design) |
+| `.claude/scripts/wait-for-codex.sh` | Polls a PR for Codex's answer; run as a Monitor so Claude is notified instead of anyone having to check |
 | `plans/` | Plan Mode output, persisted per feature (plain reasoning, no status tracking) + ui-specs |
 | `docs/design/[feature]/` | Working `.dc.html` source files for Claude Design canvases |
