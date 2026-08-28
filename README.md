@@ -34,13 +34,11 @@ peer-review         (optional, reconciles findings before merging)
 merge
 ```
 
-Full sequence, including the one-time design-brief bootstrap and the optional deep-review escalation, is in the `dev-workflow` skill (and mirrored in `WORKFLOW.md` for a quick read on GitHub).
+Full sequence, including the one-time design-brief bootstrap and the optional deep-review escalation, is in the `dev-workflow` skill — `.claude/skills/dev-workflow/SKILL.md`, readable directly on GitHub.
 
 ## What's inside
 
-**`WORKFLOW.md`**: the process itself, as a human-readable reference. The full sequence (explore → design → plan → build → review → ship), when each step runs and when it's skippable, and the reasoning behind each decision.
-
-**`.claude/skills/`**: `dev-workflow` (the sequence and rules above, auto-loads when you start new feature work) plus one skill per step.
+**`.claude/skills/`**: `dev-workflow` (the full sequence, when each step runs and when it's skippable, and the reasoning behind each decision — read it directly for the human-readable reference) plus one skill per step.
 
 | Skill | What it does | When to use it |
 |---|---|---|
@@ -57,16 +55,23 @@ Full sequence, including the one-time design-brief bootstrap and the optional de
 ## Requirements
 
 - **Claude Code**, on at least a Claude Pro plan ($20/month) or API credits. It's not included in Claude's free tier. Plan Mode, `/code-review`, `/code-review ultra`, and the `design` skill (Claude Design) all come with it, nothing extra to install.
+- **The `frontend-design` plugin**, Anthropic's official aesthetic-judgment plugin — used by `design-brief`, `visual-explore`, and (as a fallback) `execute`. **Not bundled with Claude Code**, unlike the rest of the list above — install it once, same as any account requirement below:
+  ```
+  /plugin marketplace add anthropics/claude-plugins-official
+  /plugin install frontend-design@claude-plugins-official
+  ```
+  Without it, those three steps still run, they just lose their aesthetic-judgment pass — UI work will drift toward generic AI-default visuals.
 - **A GitHub repo**, for PRs and for connecting Codex.
 - **Codex**, on at least a ChatGPT Plus plan, if you want the `@codex review` step. Codex's free tier gives limited local access but excludes cloud-based GitHub code review, which is exactly what that step relies on. Comment `@codex review` on a PR without it, and nothing happens.
 
-No Codex, no Plus plan? Drop that step. `/code-review` and `/code-review ultra` still cover you, see "Adapting this to your project" in `WORKFLOW.md`.
+No Codex, no Plus plan? Drop that step. `/code-review` and `/code-review ultra` still cover you, see "Adapting this to your project" in `.claude/skills/dev-workflow/SKILL.md`.
 
 ## Setup
 
-1. Copy `.claude/skills/` into `~/.claude/skills/` (your home directory, not any one project) — that's what makes the workflow apply to every project automatically, not just the one you copied it into. Prefer to keep it project-local instead? Copy it into the project's own `.claude/skills/` and drop `WORKFLOW.md` there too.
-2. Read "Adapting this to your project" below. A few things (where your backlog lives, whether you use Codex) need pointing at your own setup — most of that now happens through your project's own `CLAUDE.md`, not by editing the skill files.
-3. Start a session and describe your first feature — `dev-workflow` should auto-invoke, or start it yourself with `/explore`.
+1. Install the `frontend-design` plugin (see Requirements above) — a one-time account-level install, same as connecting Codex.
+2. Copy `.claude/skills/` into `~/.claude/skills/` (your home directory, not any one project) — that's what makes the workflow apply to every project automatically, not just the one you copied it into. Prefer to keep it project-local instead? Copy it into the project's own `.claude/skills/` instead.
+3. Read "Adapting this to your project" below. A few things (where your backlog lives, whether you use Codex) need pointing at your own setup — most of that now happens through your project's own `CLAUDE.md`, not by editing the skill files.
+4. Start a session and describe your first feature — `dev-workflow` should auto-invoke, or start it yourself with `/explore`.
 
 That's the whole install. Claude Code picks up `~/.claude/skills/` automatically in every project, no build step, no package.
 

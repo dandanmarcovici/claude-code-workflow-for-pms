@@ -19,9 +19,10 @@ You are starting a visual exploration session in Claude Design (the `design` ski
 Before touching the canvas:
 
 1. Read `docs/design-guidelines.md` — this is the visual contract. You must follow it strictly.
-2. Ask the user: **which feature or screen is this session for?**
-3. Ask if there are additional files to load (data model, user journey, existing components, reference screenshots). Read whatever the user points to.
-4. Ask: **what specific concerns do you have about this UI?** (layout scalability, states, interactions, open questions). This shapes what you explore.
+2. Apply the `frontend-design` skill for this screen's structural and layout judgment calls (hero moment, structural devices, motion, information hierarchy). The tokens in `design-guidelines.md` are fixed, but how this specific screen uses them isn't decided yet — that's a real design decision made in this session, not an implementation detail left for `execute`.
+3. Ask the user: **which feature or screen is this session for?**
+4. Ask if there are additional files to load (data model, user journey, existing components, reference screenshots). Read whatever the user points to.
+5. Ask: **what specific concerns do you have about this UI?** (layout scalability, states, interactions, open questions). This shapes what you explore.
 
 Do not invoke the `design` skill until you have this context.
 
@@ -34,7 +35,7 @@ Invoke the `design` skill (equivalent to running `/design`) and follow its workf
 1. Author each screen as a `.dc.html` working file, named as the artboard (`Main.dc.html` for the entry screen, plus siblings for other states/screens). Keep these working files in a dedicated folder under `docs/design/[feature-name]/` — they are the source of truth for every later revision.
 2. Build the default / happy path state first. Announce what you're building before you build it.
 3. Use exact values from `design-guidelines.md` — typography, colors, spacing, component patterns.
-4. Seed the payload with the skill's `seed-canvas.mjs` helper, run `--check`, then publish via the `Artifact` tool. Share the published link and describe what you built. Wait for user feedback before iterating.
+4. Before publishing, apply `frontend-design`'s restraint/self-critique pass — cut anything that doesn't serve the brief. Then seed the payload with the skill's `seed-canvas.mjs` helper, run `--check`, and publish via the `Artifact` tool. Share the published link and describe what you built. Wait for user feedback before iterating.
 
 ---
 

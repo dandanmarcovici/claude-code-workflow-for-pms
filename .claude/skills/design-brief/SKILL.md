@@ -42,9 +42,11 @@ If the user provides a link, use WebFetch to scan the visual structure of the pa
 
 ## Step 3 — Define direction
 
+This is the point where the product's token system actually gets decided — not `execute`, which only fills gaps the docs this session produces don't cover. Use the `frontend-design` skill's brainstorm → plan → critique method to get there, not a first-instinct answer: draft the direction below from the references and context, then check it against them — if a choice reads like the generic default you'd produce for any similar brief rather than one made for this brief, revise it and note what changed and why. Only present it to the user once it survives that check.
+
 Based on references and context, propose a clear aesthetic direction:
 
-- **Tone**: one word or phrase that captures the essence (e.g., "functional minimalism", "clean with weight")
+- **Tone**: one word or phrase that captures the essence (e.g., "functional minimalism", "clean with weight") — this doubles as the design's signature, the one thing it should be remembered by.
 - **Typography**: primary font family + secondary (avoid Inter, Roboto, Arial — see the `frontend-design` skill for why)
 - **Palette**: background, primary, accent, text — with hex values when possible
 - **Layout pattern**: how information is organized (e.g., card-based, list-heavy, full-bleed)
