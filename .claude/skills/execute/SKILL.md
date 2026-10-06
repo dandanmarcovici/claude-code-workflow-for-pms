@@ -23,3 +23,12 @@ If the current task involves UI components or pages:
 - Include clear comments within the code where logic is non-obvious.
 - Do not add scope beyond what the plan describes. If you spot something worth adding, note it but do not implement it.
 - If implementation surfaces a genuinely new color/token or component pattern not yet in `docs/design-guidelines.md`, promote it there directly once confirmed working — don't leave it undocumented for a later cleanup pass that may never happen.
+
+## Before reporting done
+
+Done means verified, not just written. Before reporting the task complete:
+
+1. **Check it actually works**, against the plan's Proof section. Pick whatever fits the change: tests, build, running the app locally, exercising it in the browser, comparing a screenshot to the ui-spec. If the project's `CLAUDE.md` has a "Verifying your work" block, run it. For a bug fix, the strongest proof is reproducing the bug before the fix and showing it gone after.
+2. **Show the evidence.** What you ran and what you saw — test output, the screen you checked. "It works" without evidence doesn't count.
+3. **Report deviations from the approved plan**, or say there were none. The user reads the plan, not the diff — this is how they learn what changed.
+4. **Say what you couldn't verify**, and why. A gap stated plainly is fine; a gap hidden behind "done" isn't.

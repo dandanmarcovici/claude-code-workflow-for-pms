@@ -17,9 +17,9 @@ explore
     ↓
 visual-explore      (UI features only)
     ↓
-Plan Mode           (native, the real due-diligence step)
+Plan Mode           (native, the real due-diligence step, ends with a Proof section)
     ↓
-execute
+execute             (verifies against the plan's Proof, shows evidence)
     ↓
 /code-review        (native, every session before pushing)
     ↓

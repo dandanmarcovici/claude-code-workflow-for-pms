@@ -27,11 +27,12 @@ NEW FEATURE / BUG
   Plan Mode         ← Claude enters Plan Mode itself (EnterPlanMode), explores the
       ↓               code, reasons through the approach and trade-offs, presents
       ↓               it for approval (ExitPlanMode) — this is where due diligence
-      ↓               actually happens
+      ↓               actually happens. Ends with a short Proof section.
   git: branch out   ← feature/short-name, from main
       ↓
-  execute           ← implement the plan (loads design-guidelines.md + ui-spec if exists)
-      ↓
+  execute           ← implement the plan (loads design-guidelines.md + ui-spec if exists),
+      ↓               then verify against the plan's Proof and show the evidence
+      ↓               before reporting done
   /code-review      ← native, local, free — Claude reviews its own diff
       ↓               effort: low (1 file/small diff) → medium (multi-file, new pattern)
       ↓               → high/max (architecture, security-sensitive, schema changes).
@@ -39,7 +40,9 @@ NEW FEATURE / BUG
   git: push → PR    ← opened via GitHub, targets main
       ↓
   comment "@codex review" on the PR   ← always, immediately — GitHub's auto-trigger on PR
-      ↓                                 open isn't reliable in practice, don't wait/hope for it
+      ↓                                 open isn't reliable in practice, don't wait/hope for it.
+      ↓                                 If the plan file is in the branch, ask Codex to also
+      ↓                                 check the diff against it, not just for bugs
       ↓
   arm the Codex watch  ← Monitor + .claude/scripts/wait-for-codex.sh <PR>
       ↓                Claude gets pinged the moment Codex answers (~3min) instead
@@ -96,6 +99,7 @@ This workflow was built and iterated on inside a real production codebase — a 
 - **`docs/design-guidelines.md`** — created automatically the first time you run `design-brief`. Nothing to set up in advance.
 - **Your backlog/tracker** — `create-issue` needs a target. It asks the project's `CLAUDE.md` for where the backlog lives; if that's not documented, it asks you.
 - **Codex + GitHub** — `@codex review` assumes Codex's GitHub app is connected to your repo, and needs at least a ChatGPT Plus plan (the free tier excludes GitHub PR review). If you don't use Codex, drop that step from the sequence and rely on `/code-review` + `/code-review ultra` instead.
+- **Verification command (optional)** — if checking the project takes more than "open the app", add a short `## Verifying your work` block to the project's `CLAUDE.md` (build/test/lint commands and what healthy output looks like). `execute` runs it before reporting done. Without it, Claude still verifies, just by judgment.
 - **Claude Design** — `visual-explore` invokes the bundled `design` skill (Claude Design's editor running inside a published Artifact). Ships with Claude Code — nothing to install.
 - **`frontend-design` plugin** — applied as a full brainstorm/plan/critique process during `design-brief` and `visual-explore`, and as a fallback during `execute` for gaps those docs don't cover. It is **not bundled with Claude Code** — Anthropic's official plugin, install once: `/plugin marketplace add anthropics/claude-plugins-official` then `/plugin install frontend-design@claude-plugins-official`. Without it, those three steps still run, they just lose their aesthetic-judgment pass.
 
@@ -127,7 +131,7 @@ Claude can run these commands for you — just ask. The important thing is not f
 3. Work on branch using the sequence above
 4. /code-review before pushing — every time, it's free (pick effort by change size — see "Choosing /code-review effort")
 5. Push, open PR (even solo — build the habit)
-6. Comment "@codex review" on the PR immediately — always, don't rely on auto-trigger
+6. Comment "@codex review" on the PR immediately — always, don't rely on auto-trigger (point it at the plan file if it's in the branch)
 7. Arm the Codex watch: Monitor running .claude/scripts/wait-for-codex.sh <PR>
 8. If complex/risky: /code-review ultra
 9. peer-review when the watch fires, to reconcile what Codex posted
@@ -143,8 +147,9 @@ Claude can run these commands for you — just ask. The important thing is not f
 - **Never code before exploring.** `explore` first, always.
 - **Never build UI without `docs/design-guidelines.md` existing.** Run `design-brief` to bootstrap it — but only as a bootstrap or for a deliberate direction change, not per-epic or per-screen. Once it exists, `visual-explore` and `execute` extend it incrementally.
 - **Run `visual-explore` before implementing new screens or structural layout changes.** Skip only for logic-only features, bug fixes, or minor visual adjustments.
-- **Default to Plan Mode after exploring, for anything beyond a small self-contained fix.** Claude enters Plan Mode itself (`EnterPlanMode`) rather than waiting to be asked, explores the code, and presents the approach — with trade-offs and the "why" behind each decision — for approval via `ExitPlanMode` before writing code. A non-developer product owner typically doesn't watch execution live or reopen a plan file afterward, so a checklist artifact nobody rereads is worthless — the reasoning has to actually surface in the conversation instead. Skip only for the same bar as `visual-explore`: small, self-contained bug fixes or cosmetic tweaks. If you're not a developer, err toward more rigor, not less — time and tokens aren't the constraint, product quality is.
-- **Never accept code blindly.** Run `/code-review` (native) every time before pushing — it's free and local, no reason to skip it. Pick effort by change size (see "Choosing `/code-review` effort") — don't let it default to `high`. Comment `@codex review` on every PR immediately after opening it — the GitHub app's auto-trigger isn't reliable; don't wait and hope it fires. For complex or risky changes, escalate to `/code-review ultra`, then `peer-review` to reconcile whatever Codex and/or ultra posted.
+- **Default to Plan Mode after exploring, for anything beyond a small self-contained fix.** Claude enters Plan Mode itself (`EnterPlanMode`) rather than waiting to be asked, explores the code, and presents the approach — with trade-offs and the "why" behind each decision — for approval via `ExitPlanMode` before writing code. A non-developer product owner typically doesn't watch execution live or reopen a plan file afterward, so a checklist artifact nobody rereads is worthless — the reasoning has to actually surface in the conversation instead. Skip only for the same bar as `visual-explore`: small, self-contained bug fixes or cosmetic tweaks. If you're not a developer, err toward more rigor, not less — time and tokens aren't the constraint, product quality is. Every plan ends with a short **Proof** section: how we'll know it works (a test that passes, the screen matching the ui-spec, an endpoint returning the new field). It gives `execute` a concrete target to verify against, and gives you a way to judge "done" without reading the code.
+- **Done means verified.** `execute` doesn't report complete until it has checked the change against the plan's Proof and shown the evidence — what it ran, what it saw, any deviation from the plan, anything it couldn't verify. *How* to verify is left to judgment (tests, local server, browser, screenshot); that it happens, and that the evidence is shown, is not.
+- **Never accept code blindly.** Run `/code-review` (native) every time before pushing — it's free and local, no reason to skip it. Pick effort by change size (see "Choosing `/code-review` effort") — don't let it default to `high`. Comment `@codex review` on every PR immediately after opening it — the GitHub app's auto-trigger isn't reliable; don't wait and hope it fires. When the plan file is in the branch, ask Codex in the same comment to also check that the diff matches it — a second agent checking plan compliance, not just bugs. For complex or risky changes, escalate to `/code-review ultra`, then `peer-review` to reconcile whatever Codex and/or ultra posted.
 - **Prefer a native Claude Code command/skill over a hand-rolled one.** Before building a custom workflow step (planning, review, etc.), check whether Claude Code already has one — it's maintained, tested at scale, and usually does the job better than something copied from a blog post or another PM's setup. Plan Mode replacing a custom "plan" command, and `/code-review` replacing a custom "review" command, are both instances of this. If in doubt, ask/search before building.
 - **No changelog file, no automated "update docs" step.** If you're using proper PR review, `git log` and PR history already give more detail than a changelog ever will — and unless someone is actually reading it live, it's ceremony, not documentation. Don't recreate this without a real, currently-unmet reader.
 - **When AI makes a mistake:** ask "what in your instructions made you make this mistake?" → fix the source (a skill file or `CLAUDE.md`), not just the immediate output.
