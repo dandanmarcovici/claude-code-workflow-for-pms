@@ -12,3 +12,8 @@ Thumbs.db
 
 # Claude Code local settings (personal, not part of the shared template)
 .claude/settings.local.json
+
+# Personal project-tracking files (kept local, not part of the public template)
+context.md
+tasks.md
+log.md
