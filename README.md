@@ -46,7 +46,7 @@ Full sequence, including the one-time design-brief bootstrap and the optional de
 | `explore` | Reads the codebase, asks clarifying questions, surfaces ambiguity, no code written yet | Before every feature or fix |
 | `design-brief` | Discovery session that produces `docs/design-guidelines.md`: aesthetic direction, typography, palette, layout patterns | Once per product, or a deliberate direction change, not per screen |
 | `visual-explore` | Iterates on UI directly in Claude Design before any code, extracts a `ui-spec-[feature].md` for the build to follow | New screens or structural layout changes |
-| `execute` | Implements the plan step by step, loading the design guidelines and ui-spec where they exist | After Plan Mode's plan is approved |
+| `execute` | Implements the plan step by step, loading the design guidelines and ui-spec where they exist, then verifies against the plan's Proof and shows the evidence before reporting done | After Plan Mode's plan is approved |
 | `peer-review` | Fetches real PR review comments, verifies each against the actual code, decides what's worth fixing | Opt-in, once a PR has real findings to reconcile |
 | `create-issue` | Fast-captures a bug or idea to your backlog mid-flow, 2-3 questions max | Whenever something surfaces while you're heads-down on something else |
 
@@ -82,6 +82,7 @@ That's the whole install. Claude Code picks up `~/.claude/skills/` automatically
 - **Don't build process artifacts nobody reads.** A changelog, a progress-percentage checklist on plan files: both got cut here because nobody, including me, ever read them live. A doc with no real reader is ceremony, not documentation.
 - **Automated review triggers aren't reliable: verify, don't hope.** GitHub's "review on PR open" integrations can silently not fire. Make the trigger an explicit step instead of an assumption.
 - **A design system is a bootstrap step, not a per-screen ritual.** Run the discovery session once, then extend it incrementally.
+- **Grow the workflow gradually; a guide isn't a rule.** When Anthropic's AI-native SDLC playbook came out, I went through it item by item instead of adopting it whole, and only a few things made the cut (verifying before "done", a Proof section in every plan). The rest, like extra files and automatic blocks, can wait for a real problem, since restricting the model too early can shut down things it already does well.
 - **Match review effort to change size.** Defaulting every review to maximum effort is expensive and, past a point, buries the real findings in noise.
 
 ## Companion repos
